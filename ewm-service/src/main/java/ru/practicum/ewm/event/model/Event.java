@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.categories.model.Category;
-import ru.practicum.ewm.event.location.Location;
+import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
@@ -57,7 +57,7 @@ public class Event {
     /**
      * Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss")
      */
-    @Column(name = "event_date")
+    @Column(name = "event_date", columnDefinition = "TIMESTAMP")
     @JsonDeserialize(using = CustomDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Future
@@ -82,7 +82,8 @@ public class Event {
     /**
      * Широта и долгота места проведения события
      */
-    @ManyToOne(cascade = {CascadeType.ALL})
+    //@ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne()
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 

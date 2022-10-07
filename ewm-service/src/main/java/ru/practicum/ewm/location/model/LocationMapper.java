@@ -1,4 +1,4 @@
-package ru.practicum.ewm.event.location;
+package ru.practicum.ewm.location.model;
 
 public class LocationMapper {
     public static LocationDto toLocationDto(Location location) {
@@ -12,6 +12,15 @@ public class LocationMapper {
         return Location.builder()
                 .lat(locationDto.getLat())
                 .lon(locationDto.getLon())
+                .build();
+    }
+
+    public static Location toLocationFromInput(LocationInputDto locationInputDto) {
+        return Location.builder()
+                .lat(locationInputDto.getLat())
+                .lon(locationInputDto.getLon())
+                .description(locationInputDto.getDescription())
+                .radius(locationInputDto.getRadius())
                 .build();
     }
 }

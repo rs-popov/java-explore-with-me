@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.ewm.event.location.LocationDto;
+import ru.practicum.ewm.location.model.LocationDto;
 import ru.practicum.ewm.event.model.CustomDateDeserializer;
 
 import javax.validation.constraints.NotNull;

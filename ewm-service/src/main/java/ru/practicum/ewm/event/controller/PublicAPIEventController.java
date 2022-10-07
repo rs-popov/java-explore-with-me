@@ -3,10 +3,13 @@ package ru.practicum.ewm.event.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.client.CreatingHit;
+import ru.practicum.ewm.client.StatisticsClient;
 import ru.practicum.ewm.event.dto.EventOutputDto;
 import ru.practicum.ewm.event.dto.EventOutputShortDto;
 import ru.practicum.ewm.event.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.List;
 @RequestMapping(path = "/events")
 public class PublicAPIEventController {
     private final EventService eventService;
+    private final StatisticsClient statisticsClient;
 
     /**
      * Получение событий с возможностью фильтрации
@@ -33,7 +37,9 @@ public class PublicAPIEventController {
      * @param size          - количество событий в наборе
      */
     @GetMapping()
-    public List<EventOutputShortDto> getEvents(@RequestParam(required = false) String text,
+    @CreatingHit
+    public List<EventOutputShortDto> getEvents(HttpServletRequest request,
+                                               @RequestParam(required = false) String text,
                                                @RequestParam(required = false) List<Long> categories,
                                                @RequestParam(required = false) Boolean paid,
                                                @RequestParam(required = false) String rangeStart,
@@ -51,8 +57,18 @@ public class PublicAPIEventController {
      *
      * @param id - id события
      */
-    @GetMapping("/{id}")
-    public EventOutputDto getPublishedEventById(@PathVariable Long id) {
+    @GetMapping("/{id}") //TODO проверить контроллер, не совпадает с тестами в постман
+    @CreatingHit
+    public EventOutputDto getPublishedEventById(HttpServletRequest request, @PathVariable Long id) {
         return eventService.getPublishedEventById(id);
+    }
+
+
+    @GetMapping("/loc")
+
+    public List<EventOutputShortDto> getEvents(@RequestParam Double lat,
+                                               @RequestParam Double lon,
+                                               @RequestParam Double distance) {
+        return eventService.getEventsLoc(lat, lon, distance);
     }
 }

@@ -44,4 +44,7 @@ public interface EventService {
                                       Integer size);
 
     EventOutputDto updateEventByAdmin(Long eventId, EventInputDto inputEvent);
+
+
+    List<EventOutputShortDto> getEventsLoc(Double lat, Double lon, Double distance);
 }

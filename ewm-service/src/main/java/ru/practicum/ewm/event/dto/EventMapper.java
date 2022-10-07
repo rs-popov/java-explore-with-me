@@ -1,7 +1,8 @@
 package ru.practicum.ewm.event.dto;
 
 import ru.practicum.ewm.categories.model.Category;
-import ru.practicum.ewm.event.location.LocationMapper;
+import ru.practicum.ewm.location.model.Location;
+import ru.practicum.ewm.location.model.LocationMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.user.dto.UserMapper;
@@ -11,14 +12,14 @@ import java.time.LocalDateTime;
 
 public class EventMapper {
 
-    public static Event toEventFromInputDto(EventInputDto eventInputDto, Category category, User initiator) {
+    public static Event toEventFromInputDto(EventInputDto eventInputDto, Category category, User initiator, Location location) {
         return Event.builder()
                 .annotation(eventInputDto.getAnnotation())
                 .category(category)
                 .description(eventInputDto.getDescription())
                 .eventDate(eventInputDto.getEventDate())
                 .initiator(initiator)
-                .location(eventInputDto.getLocation())
+                .location(location)
                 .paid(eventInputDto.getPaid())
                 .participantLimit(eventInputDto.getParticipantLimit())
                 .title(eventInputDto.getTitle())

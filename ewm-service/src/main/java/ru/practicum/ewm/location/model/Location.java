@@ -1,4 +1,4 @@
-package ru.practicum.ewm.event.location;
+package ru.practicum.ewm.location.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +23,11 @@ public class Location {
     private Double lat;
     @Column(name = "lon", nullable = false)
     private Double lon;
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "radius")
+    @Builder.Default
+    private Double radius = 0.2;
+
 }

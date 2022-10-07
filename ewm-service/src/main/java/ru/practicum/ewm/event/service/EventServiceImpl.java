@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.repository.CategoryRepository;
+import ru.practicum.ewm.client.StatisticsClient;
+import ru.practicum.ewm.client.ViewStatsDto;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
@@ -14,6 +16,8 @@ import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.exceptions.BadRequestException;
 import ru.practicum.ewm.exceptions.ForbiddenAccessException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
+import ru.practicum.ewm.location.model.Location;
+import ru.practicum.ewm.location.repository.LocationRepository;
 import ru.practicum.ewm.requests.repository.RequestRepository;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
@@ -22,10 +26,7 @@ import javax.validation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,6 +37,8 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
+    private final LocationRepository locationRepository;
+    private final StatisticsClient statisticsClient;
 
     @Override
     @Transactional
@@ -56,9 +59,23 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new ObjectNotFoundException("User with id=" + userId + " was not found."));
         Category category = categoryRepository.findById(eventInputDto.getCategory())
                 .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + eventInputDto.getCategory() + " was not found."));
-        Event event = EventMapper.toEventFromInputDto(eventInputDto, category, initiator);
+        System.out.println("input - " + eventInputDto.getLocation());
+        Optional<Location> location = locationRepository.findLocation(eventInputDto.getLocation().getLat(), eventInputDto.getLocation().getLon());
+        Location locFroEvent;
+        if (location.isPresent()) {
+            System.out.println("нашли");
+            locFroEvent = location.get();
+        } else {
+            System.out.println("не нашли");
+            locFroEvent = locationRepository.save(eventInputDto.getLocation());
+        }
+
+        System.out.println(locFroEvent);
+        Event event = EventMapper.toEventFromInputDto(eventInputDto, category, initiator, locFroEvent);
+        System.out.println(event.getLocation());
         validateEventDate(event, 2);
-        return getFullOutputDto(eventRepository.save(event));
+        return EventMapper.toEventOutputDto(eventRepository.save(event), 0, 0);
+        //return getFullOutputDto(eventRepository.save(event));
     }
 
     @Override
@@ -85,7 +102,9 @@ public class EventServiceImpl implements EventService {
         User initiator = oldEvent.getInitiator();
         Category category = categoryRepository.findById(eventInputDto.getCategory())
                 .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + eventInputDto.getCategory() + " was not found."));
-        Event event = EventMapper.toEventFromInputDto(eventInputDto, category, initiator);
+        //todo
+        Location location = locationRepository.findLocation(eventInputDto.getLocation().getLat(), eventInputDto.getLocation().getLon()).get();
+        Event event = EventMapper.toEventFromInputDto(eventInputDto, category, initiator, location);
         validateEventDate(event, 2);
         event.setId(update.getEventId());
         return getFullOutputDto(eventRepository.save(event));
@@ -143,17 +162,23 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventOutputShortDto> getEvents(String text,
-                                               List<Long> categories,
-                                               Boolean paid,
-                                               String rangeStart,
-                                               String rangeEnd,
-                                               Boolean onlyAvailable,
-                                               String sort,
-                                               Integer from,
-                                               Integer size) {
-        List<Event> events = eventRepository.getEvents(text, categories, paid, getDate(rangeStart),
-                        getDate(rangeEnd), getPageRequest(from, size))
+    public List<EventOutputShortDto> getEvents(
+            String text,
+            List<Long> categories,
+            Boolean paid,
+            String rangeStart,
+            String rangeEnd,
+            Boolean onlyAvailable,
+            String sort,
+            Integer from,
+            Integer size) {
+        List<Event> events = eventRepository.getEvents(
+                        text,
+                        categories,
+                        paid,
+                        rangeStart,
+                        rangeEnd,
+                        getPageRequest(from, size))
                 .stream()
                 .collect(Collectors.toList());
         if (onlyAvailable != null && onlyAvailable) {
@@ -190,8 +215,8 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.searchEvents(users,
                         states,
                         categories,
-                        getDate(rangeStart),
-                        getDate(rangeEnd),
+                        rangeStart,
+                        rangeEnd,
                         getPageRequest(from, size))
                 .stream()
                 .collect(Collectors.toList());
@@ -239,13 +264,14 @@ public class EventServiceImpl implements EventService {
 
     private EventOutputDto getFullOutputDto(Event event) {
         long requests = requestRepository.getCountConfirmedRequestByEventId(event.getId());
-        long views = 0; //TODO
+
+        long views = getView(event.getId()); //TODO
         return EventMapper.toEventOutputDto(event, requests, views);
     }
 
     private EventOutputShortDto getShortOutputDto(Event event) {
         long requests = requestRepository.getCountConfirmedRequestByEventId(event.getId());
-        long views = 0; //TODO
+        long views = getView(event.getId()); //TODO
         return EventMapper.toEventOutputShortDto(event, requests, views);
     }
 
@@ -256,10 +282,29 @@ public class EventServiceImpl implements EventService {
     }
 
     private LocalDateTime getDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (date != null) {
             return LocalDateTime.parse(date, formatter);
         }
         return null;
+    }
+
+
+    @Override
+    public List<EventOutputShortDto> getEventsLoc(Double lat, Double lon, Double distance) {
+        List<Location> locations = locationRepository.searchLocations(lat, lon, distance);
+
+        return eventRepository.searchInLoc(locations).stream()
+                .map(this::getShortOutputDto)
+                .collect(Collectors.toList());
+    }
+
+
+    private Integer getView(Long eventId) {
+        ViewStatsDto[] stats = statisticsClient.getStatsForEvent(eventId);
+        if (stats.length!=0){
+            return stats[0].getHits();
+        } else return 0;
+
     }
 }

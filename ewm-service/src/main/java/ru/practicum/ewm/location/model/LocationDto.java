@@ -1,4 +1,4 @@
-package ru.practicum.ewm.event.location;
+package ru.practicum.ewm.location.model;
 
 import lombok.Builder;
 import lombok.Data;
