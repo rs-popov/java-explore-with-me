@@ -3,8 +3,8 @@ package ru.practicum.ewm.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.user.dto.UserInputDto;
-import ru.practicum.ewm.user.dto.UserOutputDto;
+import ru.practicum.ewm.user.model.dto.UserInputDto;
+import ru.practicum.ewm.user.model.dto.UserOutputDto;
 import ru.practicum.ewm.user.service.UserService;
 
 import javax.validation.Valid;
@@ -12,7 +12,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @Validated
 @RestController
 @RequiredArgsConstructor

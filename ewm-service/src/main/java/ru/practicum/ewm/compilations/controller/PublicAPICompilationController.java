@@ -2,14 +2,13 @@ package ru.practicum.ewm.compilations.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.compilations.dto.CompilationOutputDto;
+import ru.practicum.ewm.compilations.model.dto.CompilationOutputDto;
 import ru.practicum.ewm.compilations.service.CompilationService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/compilations")

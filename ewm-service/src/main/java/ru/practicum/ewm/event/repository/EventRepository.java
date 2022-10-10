@@ -9,15 +9,13 @@ import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.location.model.Location;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(" select e from Event e " +
-            "where e.initiator.id = ?1 ")
+            "where e.initiator.id = ?1 " +
+            "order by e.eventDate desc ")
     Page<Event> getEventsByInitiator(Long userId, Pageable page);
-
 
     @Query("select e from Event e " +
             "where (e.state = 'PUBLISHED') " +
@@ -27,8 +25,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and (:rangeStart is null or e.eventDate > cast(:rangeStart as timestamp))" +
             "and (:rangeEnd is null or e.eventDate < cast(:rangeEnd as timestamp))" +
             "and (:categories is null or e.category.id in :categories)")
-    Page<Event> getEvents(
-            @Param("text") String text,
+    Page<Event> getEvents(@Param("text") String text,
                           @Param("categories") List<Long> categories,
                           @Param("paid") Boolean paid,
                           @Param("rangeStart") String rangeStart,
@@ -48,20 +45,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                              @Param("rangeEnd") String rangeEnd,
                              Pageable page);
 
-
-    @Query(" select e from Event e " +
-            "where e.initiator.id = ?1 and e.id = ?2 ")
-    Optional<Event> findEventByInitiator(Long userId, Long eventId);
-
-    @Query(" select e from Event e " +
-            "where e.initiator.id = ?1 ")
-        //TODO
-    Page<Event> getEventsByAdmin(Pageable page);
-
     @Query("select count(e) from Event e " +
             "where e.category.id = ?1 ")
     int getCountEventByCategoryId(Long catId);
 
     @Query("select e from Event e where e.location in ?1")
-    List<Event> searchInLoc(List<Location> locations);
+    List<Event> searchEventsInLoc(List<Location> locations);
 }

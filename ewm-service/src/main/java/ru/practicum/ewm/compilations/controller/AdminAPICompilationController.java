@@ -3,13 +3,12 @@ package ru.practicum.ewm.compilations.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.compilations.dto.CompilationInputDto;
-import ru.practicum.ewm.compilations.dto.CompilationOutputDto;
+import ru.practicum.ewm.compilations.model.dto.CompilationInputDto;
+import ru.practicum.ewm.compilations.model.dto.CompilationOutputDto;
 import ru.practicum.ewm.compilations.service.CompilationService;
 
 import javax.validation.Valid;
 
-@CrossOrigin(origins = "*")
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -50,9 +49,9 @@ public class AdminAPICompilationController {
      * @param eventId - id события
      */
     @DeleteMapping("/{compId}/events/{eventId}")
-    public void deleteEventToCompilation(@PathVariable Long compId,
-                                         @PathVariable Long eventId) {
-        compilationService.deleteEventToCompilation(compId, eventId);
+    public void deleteEventFromCompilation(@PathVariable Long compId,
+                                           @PathVariable Long eventId) {
+        compilationService.deleteEventFromCompilation(compId, eventId);
     }
 
     /**

@@ -37,15 +37,17 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<Location> getLocations(String description, Integer from, Integer size) {
-        return locationRepository.findLocations(description, getPageRequest(from, size)).stream()
+    public List<LocationOutputDtoWithDistance> searchLocations(Double lat,
+                                                               Double lon,
+                                                               Double distance,
+                                                               String name,
+                                                               String description,
+                                                               Integer from,
+                                                               Integer size) {
+        return locationRepository.searchLocations(lat, lon, distance, name, description, getPageRequest(from, size)).stream()
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Location> searchLocations(Double lat, Double lon, Double distance) {
-        return locationRepository.searchLocations(lat, lon, distance);
-    }
 
     private PageRequest getPageRequest(Integer from, Integer size) {
         int page = from < size ? 0 : from / size;

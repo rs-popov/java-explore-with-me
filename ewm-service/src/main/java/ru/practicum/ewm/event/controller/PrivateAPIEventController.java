@@ -3,27 +3,23 @@ package ru.practicum.ewm.event.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.EventInputDto;
-import ru.practicum.ewm.event.dto.EventOutputDto;
-import ru.practicum.ewm.event.dto.EventOutputShortDto;
-import ru.practicum.ewm.event.dto.EventUpdateDto;
+import ru.practicum.ewm.event.model.dto.EventInputDto;
+import ru.practicum.ewm.event.model.dto.EventOutputDto;
+import ru.practicum.ewm.event.model.dto.EventOutputShortDto;
+import ru.practicum.ewm.event.model.dto.EventUpdateDto;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.requests.dto.RequestDto;
-import ru.practicum.ewm.requests.service.RequestService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "users/{userId}/events")
 public class PrivateAPIEventController {
     private final EventService eventService;
-    private final RequestService requestService;
 
     /**
      * Добавление нового события
@@ -60,7 +56,7 @@ public class PrivateAPIEventController {
     @PatchMapping
     public EventOutputDto updateEvent(@PathVariable Long userId,
                                       @RequestBody @Valid EventUpdateDto eventUpdateDto) {
-        return eventService.updateEvent(userId, eventUpdateDto);
+        return eventService.updateEventByInitiator(userId, eventUpdateDto);
     }
 
     /**
@@ -85,45 +81,5 @@ public class PrivateAPIEventController {
     public EventOutputDto rejectEventByInitiator(@PathVariable Long userId,
                                                  @PathVariable Long eventId) {
         return eventService.rejectEventByInitiator(userId, eventId);
-    }
-
-    /**
-     * Получение информации о запросах на участие в событии текущего пользователя
-     *
-     * @param userId  - id текущего пользователя
-     * @param eventId - id события
-     */
-    @GetMapping("/{eventId}/requests")
-    public List<RequestDto> getRequestByInitiator(@PathVariable Long userId,
-                                                  @PathVariable Long eventId) {
-        return requestService.getRequestsByInitiator(userId, eventId);
-    }
-
-    /**
-     * Подтверждение чужой заявки на участие в событии текущего пользователя
-     *
-     * @param userId  - id текущего пользователя
-     * @param eventId - id события
-     * @param reqId   - id заявки, которую отменяет текущий пользователь
-     */
-    @PatchMapping("/{eventId}/requests/{reqId}/confirm")
-    public RequestDto confirmRequestByInitiator(@PathVariable Long userId,
-                                                @PathVariable Long eventId,
-                                                @PathVariable Long reqId) {
-        return requestService.confirmRequestByInitiator(userId, eventId, reqId);
-    }
-
-    /**
-     * Отклонение чужой заявки на участие в событии текущего пользователя
-     *
-     * @param userId  - id текущего пользователя
-     * @param eventId - id события
-     * @param reqId   - id заявки, которую отменяет текущий пользователь
-     */
-    @PatchMapping("/{eventId}/requests/{reqId}/reject")
-    public RequestDto rejectRequestByInitiator(@PathVariable Long userId,
-                                               @PathVariable Long eventId,
-                                               @PathVariable Long reqId) {
-        return requestService.rejectRequestByInitiator(userId, eventId, reqId);
     }
 }

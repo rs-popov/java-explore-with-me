@@ -3,10 +3,13 @@ package ru.practicum.ewm.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import ru.practicum.ewm.dto.CustomDateDeserializer;
+import ru.practicum.ewm.model.dto.CustomDateDeserializer;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +31,6 @@ public class EndpointHit {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = CustomDateDeserializer.class)
     private LocalDateTime timestamp;
-
 
     @Column(name = "uri", nullable = false)
     private String uri;

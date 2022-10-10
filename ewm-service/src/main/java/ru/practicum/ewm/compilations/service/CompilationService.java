@@ -1,7 +1,7 @@
 package ru.practicum.ewm.compilations.service;
 
-import ru.practicum.ewm.compilations.dto.CompilationInputDto;
-import ru.practicum.ewm.compilations.dto.CompilationOutputDto;
+import ru.practicum.ewm.compilations.model.dto.CompilationInputDto;
+import ru.practicum.ewm.compilations.model.dto.CompilationOutputDto;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface CompilationService {
 
     void addEventToCompilation(Long compId, Long eventId);
 
-    void deleteEventToCompilation(Long compId, Long eventId);
+    void deleteEventFromCompilation(Long compId, Long eventId);
 
     void pinCompilation(Long compId);
 

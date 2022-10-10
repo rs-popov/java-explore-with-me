@@ -1,6 +1,7 @@
 package ru.practicum.ewm.categories.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.service.CategoryService;
@@ -9,7 +10,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/categories")

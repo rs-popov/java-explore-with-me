@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
     @Query(" select r from Request r " +
-            "where r.user.id = ?1 ")
+            "where r.user.id = ?1 " +
+            "order by r.created desc")
     List<Request> findRequestsByUserId(Long userId);
 
     @Query("select count(r) from Request r " +

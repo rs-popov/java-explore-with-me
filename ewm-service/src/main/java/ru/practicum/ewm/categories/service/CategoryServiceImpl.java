@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.loggingAop.CreationLogging;
+import ru.practicum.ewm.loggingAop.DeletionLogging;
+import ru.practicum.ewm.loggingAop.UpdateLogging;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.repository.CategoryRepository;
 import ru.practicum.ewm.event.repository.EventRepository;
@@ -23,28 +26,31 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CreationLogging
     public Category createCategory(Category category) {
-        if (categoryRepository.findByName(category.getName()).size() != 0) {
-            throw new BadRequestException("Category name must be unique");
+        if (categoryRepository.findByName(category.getName()) != null) {
+            log.warn("Category was not create because category name must be unique.");
+            throw new BadRequestException("Category name must be unique.");
         }
         return categoryRepository.save(category);
     }
 
     @Override
     @Transactional
+    @UpdateLogging
     public Category updateCategory(Category category) {
-        categoryRepository.findById(category.getId())
-                .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + category.getId() + " was not found."));
+        getCategory(category.getId());
         return categoryRepository.save(category);
     }
 
     @Override
     @Transactional
+    @DeletionLogging
     public void deleteCategory(Long catId) {
-        Category category = categoryRepository.findById(catId)
-                .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + catId + " was not found."));
+        Category category = getCategory(catId);
         if (eventRepository.getCountEventByCategoryId(catId) != 0) {
-            throw new BadRequestException("No event should be associated with the category");
+            log.warn("For deleting category no event should be associated with the category.");
+            throw new BadRequestException("For deleting category no event should be associated with the category.");
         }
         categoryRepository.delete(category);
     }

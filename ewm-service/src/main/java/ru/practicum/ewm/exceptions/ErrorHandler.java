@@ -9,7 +9,6 @@ import java.util.Locale;
 
 @RestControllerAdvice()
 public class ErrorHandler {
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequestException(BadRequestException e) {

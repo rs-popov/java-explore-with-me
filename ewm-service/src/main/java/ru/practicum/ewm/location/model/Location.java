@@ -21,13 +21,17 @@ public class Location {
 
     @Column(name = "lat", nullable = false)
     private Double lat;
+
     @Column(name = "lon", nullable = false)
     private Double lon;
+
     @Column(name = "description")
     private String description;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "radius")
     @Builder.Default
-    private Double radius = 0.2;
-
+    private Double radius = 0.1;
 }

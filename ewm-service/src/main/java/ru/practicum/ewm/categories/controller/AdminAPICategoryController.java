@@ -8,7 +8,6 @@ import ru.practicum.ewm.categories.service.CategoryService;
 
 import javax.validation.Valid;
 
-@CrossOrigin(origins = "*")
 @Validated
 @RestController
 @RequiredArgsConstructor

@@ -3,19 +3,17 @@ package ru.practicum.ewm.event.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.EventInputDto;
-import ru.practicum.ewm.event.dto.EventOutputDto;
+import ru.practicum.ewm.event.model.dto.EventInputDto;
+import ru.practicum.ewm.event.model.dto.EventOutputDto;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.service.EventService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
-@RestController
 @Validated
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "admin/events")
 public class AdminAPIEventController {
@@ -40,18 +38,18 @@ public class AdminAPIEventController {
                                             @RequestParam(required = false) String rangeEnd,
                                             @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                             @RequestParam(defaultValue = "10") @Positive Integer size) {
-        return eventService.searchEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        return eventService.searchEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     /**
      * Редактирование данных любого события администратором. Валидация данных не требуется.
      *
-     * @param eventId - id события
+     * @param eventId    - id события
      * @param inputEvent - Данные для изменения информации о событии
      */
     @PutMapping("/{eventId}")
-    public EventOutputDto putEvent(@PathVariable Long eventId,
-                                   @RequestBody @Valid EventInputDto inputEvent) {
+    public EventOutputDto updateEventByAdmin(@PathVariable Long eventId,
+                                             @RequestBody EventInputDto inputEvent) {
         return eventService.updateEventByAdmin(eventId, inputEvent);
     }
 

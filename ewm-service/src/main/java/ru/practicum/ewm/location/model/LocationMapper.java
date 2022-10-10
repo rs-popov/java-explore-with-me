@@ -19,6 +19,7 @@ public class LocationMapper {
         return Location.builder()
                 .lat(locationInputDto.getLat())
                 .lon(locationInputDto.getLon())
+                .name(locationInputDto.getName())
                 .description(locationInputDto.getDescription())
                 .radius(locationInputDto.getRadius())
                 .build();

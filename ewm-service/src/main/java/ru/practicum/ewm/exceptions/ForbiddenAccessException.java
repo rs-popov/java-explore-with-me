@@ -1,12 +1,12 @@
 package ru.practicum.ewm.exceptions;
 
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
 public class ForbiddenAccessException extends RuntimeException {
-    private String reason = "For the requested operation the conditions are not met.";
-    private HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+    private final String reason = "For the requested operation the conditions are not met.";
+    private final HttpStatus httpStatus = HttpStatus.FORBIDDEN;
 
     public ForbiddenAccessException(String message) {
         super(message);

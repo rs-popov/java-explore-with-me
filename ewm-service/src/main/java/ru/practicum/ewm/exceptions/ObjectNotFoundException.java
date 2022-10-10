@@ -1,12 +1,12 @@
 package ru.practicum.ewm.exceptions;
 
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
 public class ObjectNotFoundException extends RuntimeException {
-    private String reason = "The required object was not found.";
-    private HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+    private final String reason = "The required object was not found.";
+    private final HttpStatus httpStatus = HttpStatus.NOT_FOUND;
 
     public ObjectNotFoundException(String message) {
         super(message);

@@ -2,12 +2,11 @@ package ru.practicum.ewm.requests.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.requests.dto.RequestDto;
+import ru.practicum.ewm.requests.model.dto.RequestDto;
 import ru.practicum.ewm.requests.service.RequestService;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/requests")

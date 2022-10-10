@@ -1,12 +1,10 @@
 package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.client.CreatingHit;
-import ru.practicum.ewm.client.StatisticsClient;
-import ru.practicum.ewm.event.dto.EventOutputDto;
-import ru.practicum.ewm.event.dto.EventOutputShortDto;
+import ru.practicum.ewm.statistics.aop.CreatingHit;
+import ru.practicum.ewm.event.model.dto.EventOutputDto;
+import ru.practicum.ewm.event.model.dto.EventOutputShortDto;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,14 +12,11 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/events")
 public class PublicAPIEventController {
     private final EventService eventService;
-    private final StatisticsClient statisticsClient;
 
     /**
      * Получение событий с возможностью фильтрации
@@ -38,18 +33,17 @@ public class PublicAPIEventController {
      */
     @GetMapping()
     @CreatingHit
-    public List<EventOutputShortDto> getEvents(HttpServletRequest request,
-                                               @RequestParam(required = false) String text,
-                                               @RequestParam(required = false) List<Long> categories,
-                                               @RequestParam(required = false) Boolean paid,
-                                               @RequestParam(required = false) String rangeStart,
-                                               @RequestParam(required = false) String rangeEnd,
-                                               @RequestParam(required = false) Boolean onlyAvailable,
-                                               @RequestParam(required = false) String sort,
-                                               @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                               @RequestParam(defaultValue = "10") @Positive Integer size) {
-
-        return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+    public List<EventOutputShortDto> getEventsByLoc(HttpServletRequest request,
+                                                    @RequestParam(required = false) String text,
+                                                    @RequestParam(required = false) List<Long> categories,
+                                                    @RequestParam(required = false) Boolean paid,
+                                                    @RequestParam(required = false) String rangeStart,
+                                                    @RequestParam(required = false) String rangeEnd,
+                                                    @RequestParam(required = false) Boolean onlyAvailable,
+                                                    @RequestParam(required = false) String sort,
+                                                    @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                                    @RequestParam(defaultValue = "10") @Positive Integer size) {
+        return eventService.searchEventsByUser(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
     /**
@@ -57,18 +51,22 @@ public class PublicAPIEventController {
      *
      * @param id - id события
      */
-    @GetMapping("/{id}") //TODO проверить контроллер, не совпадает с тестами в постман
+    @GetMapping("/{id}")
     @CreatingHit
-    public EventOutputDto getPublishedEventById(HttpServletRequest request, @PathVariable Long id) {
+    public EventOutputDto getPublishedEventById(HttpServletRequest request,
+                                                @PathVariable Long id) {
         return eventService.getPublishedEventById(id);
     }
 
-
+    /**
+     * Получение опубликованных доступных событий, запланированных на области с центром lat, lon и радиусом distance
+     */
     @GetMapping("/loc")
-
-    public List<EventOutputShortDto> getEvents(@RequestParam Double lat,
-                                               @RequestParam Double lon,
-                                               @RequestParam Double distance) {
-        return eventService.getEventsLoc(lat, lon, distance);
+    @CreatingHit
+    public List<EventOutputShortDto> getEventsByLoc(HttpServletRequest request,
+                                                    @RequestParam Double lat,
+                                                    @RequestParam Double lon,
+                                                    @RequestParam Double distance) {
+        return eventService.getEventsByLoc(lat, lon, distance);
     }
 }

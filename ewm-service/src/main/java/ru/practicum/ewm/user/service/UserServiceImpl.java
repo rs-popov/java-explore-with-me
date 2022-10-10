@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.loggingAop.CreationLogging;
+import ru.practicum.ewm.loggingAop.DeletionLogging;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
-import ru.practicum.ewm.user.dto.UserInputDto;
-import ru.practicum.ewm.user.dto.UserMapper;
-import ru.practicum.ewm.user.dto.UserOutputDto;
 import ru.practicum.ewm.user.model.User;
+import ru.practicum.ewm.user.model.dto.UserInputDto;
+import ru.practicum.ewm.user.model.dto.UserMapper;
+import ru.practicum.ewm.user.model.dto.UserOutputDto;
 import ru.practicum.ewm.user.repository.UserRepository;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CreationLogging
     public UserOutputDto createUser(UserInputDto input) {
         User user = UserMapper.toUserFromInputDto(input);
         return UserMapper.toUserOutputDto(userRepository.save(user));
@@ -31,11 +34,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @DeletionLogging
     public void deleteUser(long id) {
-        userRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("User with id=" + id + " was not found."));
+        getUser(id);
         userRepository.deleteById(id);
-        log.info("Удален  профиль пользователя , id={}", id);
     }
 
     @Override
@@ -45,8 +47,7 @@ public class UserServiceImpl implements UserService {
         if (ids == null || ids.isEmpty()) {
             users = userRepository.findAll(getPageRequest(from, size));
         } else if (ids.size() == 1) {
-            User user = userRepository.findById(ids.get(0))
-                    .orElseThrow(() -> new ObjectNotFoundException("User with id=" + ids.get(0) + " was not found."));
+            User user = getUser(ids.get(0));
             return List.of(UserMapper.toUserOutputDto(user));
         } else {
             users = userRepository.getUsersByIds(ids, getPageRequest(from, size));
@@ -61,6 +62,11 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(UserMapper::toUserOutputDto)
                 .collect(Collectors.toList());
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException("User with id=" + userId + " was not found."));
     }
 
     private PageRequest getPageRequest(Integer from, Integer size) {

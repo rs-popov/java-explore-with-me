@@ -11,7 +11,11 @@ public interface LocationService {
 
     Location getLocationById(Long locId);
 
-    List<Location> getLocations(String description, Integer from, Integer size);
-
-    List<Location> searchLocations(Double lat, Double lon, Double distance);
+    List<LocationOutputDtoWithDistance> searchLocations(Double lat,
+                                                        Double lon,
+                                                        Double distance,
+                                                        String name,
+                                                        String description,
+                                                        Integer from,
+                                                        Integer size);
 }

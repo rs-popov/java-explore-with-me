@@ -1,11 +1,10 @@
 package ru.practicum.ewm.requests.service;
 
-import ru.practicum.ewm.requests.dto.RequestDto;
+import ru.practicum.ewm.requests.model.dto.RequestDto;
 
 import java.util.List;
 
 public interface RequestService {
-
     List<RequestDto> getAllRequestByRequester(Long userId);
 
     RequestDto createRequest(Long userId, Long eventId);
