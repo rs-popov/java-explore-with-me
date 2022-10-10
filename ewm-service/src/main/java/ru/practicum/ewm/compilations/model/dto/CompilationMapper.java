@@ -1,8 +1,8 @@
 package ru.practicum.ewm.compilations.model.dto;
 
 import ru.practicum.ewm.compilations.model.Compilation;
-import ru.practicum.ewm.event.model.dto.EventOutputShortDto;
 import ru.practicum.ewm.event.model.Event;
+import ru.practicum.ewm.event.model.dto.EventOutputShortDto;
 
 import java.util.Set;
 

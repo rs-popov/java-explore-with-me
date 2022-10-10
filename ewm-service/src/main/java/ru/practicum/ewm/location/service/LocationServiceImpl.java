@@ -6,11 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.exceptions.BadRequestException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
-import ru.practicum.ewm.location.model.LocationOutputDtoWithDistance;
-import ru.practicum.ewm.location.repository.LocationRepository;
 import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.location.model.LocationInputDto;
 import ru.practicum.ewm.location.model.LocationMapper;
+import ru.practicum.ewm.location.model.LocationOutputDtoWithDistance;
+import ru.practicum.ewm.location.repository.LocationRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

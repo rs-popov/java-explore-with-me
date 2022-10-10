@@ -3,8 +3,8 @@ package ru.practicum.ewm.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.model.dto.EndpointHitDto;
 import ru.practicum.ewm.model.ViewStats;
+import ru.practicum.ewm.model.dto.EndpointHitDto;
 import ru.practicum.ewm.service.StatisticsService;
 
 import javax.validation.Valid;

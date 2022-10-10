@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import ru.practicum.ewm.categories.model.Category;
-import ru.practicum.ewm.location.model.LocationDto;
 import ru.practicum.ewm.event.model.EventState;
+import ru.practicum.ewm.location.model.LocationDto;
 import ru.practicum.ewm.user.model.dto.UserShortOutputDto;
 
 import javax.validation.constraints.Future;

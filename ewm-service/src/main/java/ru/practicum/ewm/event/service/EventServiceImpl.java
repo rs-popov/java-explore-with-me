@@ -16,11 +16,10 @@ import ru.practicum.ewm.exceptions.ForbiddenAccessException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
 import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.location.repository.LocationRepository;
-import ru.practicum.ewm.loggingAop.CreationLogging;
-import ru.practicum.ewm.loggingAop.UpdateLogging;
+import ru.practicum.ewm.logging.CreationLogging;
+import ru.practicum.ewm.logging.UpdateLogging;
 import ru.practicum.ewm.requests.repository.RequestRepository;
 import ru.practicum.ewm.statistics.client.StatisticsClient;
-import ru.practicum.ewm.statistics.model.ViewStatsDto;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 
@@ -267,13 +266,13 @@ public class EventServiceImpl implements EventService {
 
     private EventOutputDto getFullOutputDto(Event event) {
         long requests = requestRepository.getCountConfirmedRequestByEventId(event.getId());
-        long views = getView(event.getId());
+        long views = statisticsClient.getStatsForEvent(event.getId());
         return EventMapper.toEventOutputDto(event, requests, views);
     }
 
     private EventOutputShortDto getShortOutputDto(Event event) {
         long requests = requestRepository.getCountConfirmedRequestByEventId(event.getId());
-        long views = getView(event.getId());
+        long views = statisticsClient.getStatsForEvent(event.getId());
         return EventMapper.toEventOutputShortDto(event, requests, views);
     }
 
@@ -281,18 +280,6 @@ public class EventServiceImpl implements EventService {
         if (ChronoUnit.HOURS.between(LocalDateTime.now(), event.getEventDate()) < hoursBeforeStart) {
             throw new BadRequestException("Event data cannot be earlier than " + hoursBeforeStart + " hours from the current moment.");
         }
-    }
-
-    private Integer getView(Long eventId) {
-        try {
-            ViewStatsDto[] stats = statisticsClient.getStatsForEvent(eventId);
-            if (stats.length != 0) {
-                return stats[0].getHits();
-            }
-        } catch (Exception e) {
-            log.warn("Error: {}", e.getMessage());
-        }
-        return 0;
     }
 
     private Event getEvent(Long eventId) {
@@ -310,15 +297,17 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + catId + " was not found."));
     }
 
-    //TODO
     private Location getOrCreateLocation(EventInputDto eventInputDto) {
-        Optional<Location> location = locationRepository.findLocation(eventInputDto.getLocation().getLat(), eventInputDto.getLocation().getLon()); //TODO
-        Location locFroEvent;
-        if (location.isPresent()) {
-            locFroEvent = location.get();
+        Optional<Location> locationFromInput = locationRepository.findLocation(eventInputDto.getLocation().getLat(),
+                eventInputDto.getLocation().getLon());
+        Location resultLocation;
+        if (locationFromInput.isPresent()) {
+            resultLocation = locationFromInput.get();
         } else {
-            locFroEvent = locationRepository.save(eventInputDto.getLocation());
+            resultLocation = locationRepository.save(eventInputDto.getLocation());
+            log.info("New location id={} was created (lat={}, lon={}).",
+                    resultLocation.getId(), resultLocation.getLat(), resultLocation.getLon());
         }
-        return locFroEvent;
+        return resultLocation;
     }
 }

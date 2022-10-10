@@ -3,9 +3,9 @@ package ru.practicum.ewm.event.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.dto.EventInputDto;
 import ru.practicum.ewm.event.model.dto.EventOutputDto;
-import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.constraints.Positive;

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.loggingAop;
+package ru.practicum.ewm.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -9,41 +9,39 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.compilations.model.Compilation;
 import ru.practicum.ewm.event.model.dto.EventOutputDto;
-import ru.practicum.ewm.user.model.User;
+import ru.practicum.ewm.user.model.dto.UserOutputDto;
 
-//TODO названия методов
 @Slf4j
 @Aspect
 @Component
 public class LoggingAspect {
-    @Pointcut("@annotation(ru.practicum.ewm.loggingAop.CreationLogging)")
+    @Pointcut("@annotation(ru.practicum.ewm.logging.CreationLogging)")
     public void loggingCreate() {
     }
 
     @AfterReturning(value = "loggingCreate()", returning = "returningValue")
     public void addLogOfCreate(JoinPoint joinPoint, Object returningValue) {
         if (returningValue != null) {
-            Object o = returningValue;
-            if (o instanceof Category) {
-                Category category = (Category) o;
-                log.info("New category name = {} was created with id={}", category.getName(), category.getId());
+            if (returningValue instanceof Category) {
+                Category category = (Category) returningValue;
+                log.info("New category (name = {}) was created with id={}", category.getName(), category.getId());
             }
-            if (o instanceof Compilation) {
-                Compilation compilation = (Compilation) o;
-                log.info("New compilation title = {} was created with id={}", compilation.getTitle(), compilation.getId());
+            if (returningValue instanceof Compilation) {
+                Compilation compilation = (Compilation) returningValue;
+                log.info("New compilation (title = {}) was created with id={}", compilation.getTitle(), compilation.getId());
             }
-            if (o instanceof EventOutputDto) {
-                EventOutputDto event = (EventOutputDto) o;
-                log.info("New event title = {} was created with id={}", event.getTitle(), event.getId());
+            if (returningValue instanceof EventOutputDto) {
+                EventOutputDto event = (EventOutputDto) returningValue;
+                log.info("New event (title = {}) was created with id={}", event.getTitle(), event.getId());
             }
-            if (o instanceof User) {
-                User user = (User) o;
-                log.info("New user email = {} was created with id={}", user.getEmail(), user.getId());
+            if (returningValue instanceof UserOutputDto) {
+                UserOutputDto user = (UserOutputDto) returningValue;
+                log.info("New user (email = {}) was created with id={}", user.getEmail(), user.getId());
             }
         }
     }
 
-    @Pointcut("@annotation(ru.practicum.ewm.loggingAop.DeletionLogging)")
+    @Pointcut("@annotation(ru.practicum.ewm.logging.DeletionLogging)")
     public void loggingRemove() {
     }
 
@@ -52,24 +50,23 @@ public class LoggingAspect {
         log.info("Object {} was removed id={}", joinPoint.getSignature().getName().substring(6), joinPoint.getArgs()[0]);
     }
 
-    @Pointcut("@annotation(ru.practicum.ewm.loggingAop.UpdateLogging)")
+    @Pointcut("@annotation(ru.practicum.ewm.logging.UpdateLogging)")
     public void loggingUpdate() {
     }
 
     @AfterReturning(value = "loggingUpdate()", returning = "returningValue")
     public void addLogOfUpdate(JoinPoint joinPoint, Object returningValue) {
         if (returningValue != null) {
-            Object o = returningValue;
-            if (o instanceof Category) {
-                Category category = (Category) o;
+            if (returningValue instanceof Category) {
+                Category category = (Category) returningValue;
                 log.info("Category id={} was updated.", category.getId());
             }
-            if (o instanceof Compilation) {
-                Compilation compilation = (Compilation) o;
+            if (returningValue instanceof Compilation) {
+                Compilation compilation = (Compilation) returningValue;
                 log.info("Compilation id={} was updated.", compilation.getId());
             }
-            if (o instanceof EventOutputDto) {
-                EventOutputDto event = (EventOutputDto) o;
+            if (returningValue instanceof EventOutputDto) {
+                EventOutputDto event = (EventOutputDto) returningValue;
                 log.info("Event id={} was updated or changed in method {}.", event.getId(), joinPoint.getSignature().getName());
             }
         }

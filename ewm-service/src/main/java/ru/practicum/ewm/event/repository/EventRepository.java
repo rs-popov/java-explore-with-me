@@ -49,6 +49,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "where e.category.id = ?1 ")
     int getCountEventByCategoryId(Long catId);
 
-    @Query("select e from Event e where e.location in ?1")
+    @Query("select e from Event e " +
+            "where (e.location in ?1) " +
+            "and (e.state = 'PUBLISHED')")
     List<Event> searchEventsInLoc(List<Location> locations);
 }

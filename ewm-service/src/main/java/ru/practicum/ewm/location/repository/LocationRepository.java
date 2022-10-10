@@ -19,7 +19,8 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
             value = "select *,distance(:lat, :lon, lat, lon) as distance from locations " +
                     "where (distance(:lat, :lon, lat, lon) < (:distance+radius))" +
                     "and (:name is null or upper(name) like upper(concat('%', :name, '%')))" +
-                    "and (:description is null or upper(description) like upper(concat('%', :description, '%')))")
+                    "and (:description is null or upper(description) like upper(concat('%', :description, '%')))" +
+                    "order by distance asc ")
     Page<LocationOutputDtoWithDistance> searchLocations(@Param("lat") Double lat,
                                                         @Param("lon") Double lon,
                                                         @Param("distance") Double distance,

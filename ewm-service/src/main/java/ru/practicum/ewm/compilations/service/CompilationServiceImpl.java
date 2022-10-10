@@ -5,20 +5,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.loggingAop.CreationLogging;
-import ru.practicum.ewm.loggingAop.DeletionLogging;
 import ru.practicum.ewm.compilations.model.Compilation;
 import ru.practicum.ewm.compilations.model.dto.CompilationInputDto;
 import ru.practicum.ewm.compilations.model.dto.CompilationMapper;
 import ru.practicum.ewm.compilations.model.dto.CompilationOutputDto;
 import ru.practicum.ewm.compilations.repository.CompilationRepository;
+import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.dto.EventMapper;
 import ru.practicum.ewm.event.model.dto.EventOutputShortDto;
-import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.exceptions.BadRequestException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
+import ru.practicum.ewm.logging.CreationLogging;
+import ru.practicum.ewm.logging.DeletionLogging;
 import ru.practicum.ewm.requests.repository.RequestRepository;
+import ru.practicum.ewm.statistics.client.StatisticsClient;
 
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
+    private final StatisticsClient statisticsClient;
 
     @Override
     @Transactional
@@ -135,7 +137,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     private EventOutputShortDto getShortOutputDto(Event event) {
         long requests = requestRepository.getCountConfirmedRequestByEventId(event.getId());
-        long views = 0; //TODO
+        long views = statisticsClient.getStatsForEvent(event.getId());
         return EventMapper.toEventOutputShortDto(event, requests, views);
     }
 

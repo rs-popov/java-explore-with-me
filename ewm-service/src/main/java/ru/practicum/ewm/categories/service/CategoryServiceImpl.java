@@ -5,14 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.loggingAop.CreationLogging;
-import ru.practicum.ewm.loggingAop.DeletionLogging;
-import ru.practicum.ewm.loggingAop.UpdateLogging;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.repository.CategoryRepository;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.exceptions.BadRequestException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
+import ru.practicum.ewm.logging.CreationLogging;
+import ru.practicum.ewm.logging.DeletionLogging;
+import ru.practicum.ewm.logging.UpdateLogging;
 
 import java.util.List;
 import java.util.stream.Collectors;

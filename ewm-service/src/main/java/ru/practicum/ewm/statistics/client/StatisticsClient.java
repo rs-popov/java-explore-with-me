@@ -40,13 +40,16 @@ public class StatisticsClient extends BaseClient {
         return post("/hit", endpointHitDto);
     }
 
-    public ViewStatsDto[] getStatsForEvent(Long eventId) {
+    public Integer getStatsForEvent(Long eventId) {
         String path = "/stats?start=" + RANGE_START + "&end=" + RANGE_END + "&uris=/events/" + eventId;
-        ViewStatsDto[] result = new ViewStatsDto[0];
+        Integer result = 0;
         try {
-            result = rest.getForObject(path, ViewStatsDto[].class);
+            ViewStatsDto[] viewStats = rest.getForObject(path, ViewStatsDto[].class);
+            if (viewStats != null && viewStats.length > 0) {
+                result = viewStats[0].getHits();
+            }
         } catch (Exception e) {
-            log.warn(e.getMessage());
+            log.warn("Error: {}", e.getMessage());
         }
         return result;
     }
