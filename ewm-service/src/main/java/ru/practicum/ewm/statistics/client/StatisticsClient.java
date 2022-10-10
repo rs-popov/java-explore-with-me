@@ -17,8 +17,8 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Service
 public class StatisticsClient extends BaseClient {
-    private final static String RANGE_START = "2020-05-05 00:00:00";
-    private final static String RANGE_END = "2030-05-05 00:00:00";
+    private static final String RANGE_START = "2020-05-05 00:00:00";
+    private static final String RANGE_END = "2030-05-05 00:00:00";
 
     @Autowired
     public StatisticsClient(@Value("${STATS_SERVER_URL}") String serverUrl, RestTemplateBuilder builder) {

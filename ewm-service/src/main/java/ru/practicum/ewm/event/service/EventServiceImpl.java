@@ -213,8 +213,8 @@ public class EventServiceImpl implements EventService {
                         getPageRequest(from, size))
                 .stream()
                 .collect(Collectors.toList());
-        return events.stream().
-                map(this::getFullOutputDto)
+        return events.stream()
+                .map(this::getFullOutputDto)
                 .collect(Collectors.toList());
     }
 
