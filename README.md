@@ -1,7 +1,7 @@
 # ExploreWithMe
 
 
-### Тут ссылка
+### Ссылка на пул-реквест: https://github.com/rs-popov/java-explore-with-me/pull/1
 
 
 ### Фича для самостоятельного проектирования
