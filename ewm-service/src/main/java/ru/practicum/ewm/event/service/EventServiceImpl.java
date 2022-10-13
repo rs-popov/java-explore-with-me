@@ -130,7 +130,7 @@ public class EventServiceImpl implements EventService {
         validateEventDate(event, 1);
         if (!event.getState().equals(EventState.PENDING)) {
             log.warn("Event id={} cannot be published - Only pending events can be published.", eventId);
-            throw new ForbiddenAccessException("Only pending events can be published.");
+            throw new BadRequestException("Only pending events can be published.");
         }
         event.setState(EventState.PUBLISHED);
         return getFullOutputDto(eventRepository.save(event));
@@ -143,7 +143,7 @@ public class EventServiceImpl implements EventService {
         Event event = getEvent(eventId);
         if (event.getState().equals(EventState.PUBLISHED)) {
             log.warn("Event id={} cannot be rejected - Published events can be changed.", eventId);
-            throw new ForbiddenAccessException("Published events can be reject");
+            throw new BadRequestException("Published events can be reject");
         }
         event.setState(EventState.CANCELED);
         return getFullOutputDto(eventRepository.save(event));

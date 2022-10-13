@@ -1,9 +1,6 @@
 package ru.practicum.ewm.location.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -20,6 +17,7 @@ public class Location {
     private Long id;
 
     @Column(name = "lat", nullable = false)
+    @NonNull
     private Double lat;
 
     @Column(name = "lon", nullable = false)

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.EwmService;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
 
@@ -25,7 +26,7 @@ public class Request {
 
 
     @Column(name = "created")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
     @Builder.Default
     private LocalDateTime created = LocalDateTime.now();
 

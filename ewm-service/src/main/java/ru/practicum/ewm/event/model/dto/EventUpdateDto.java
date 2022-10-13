@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.ewm.EwmService;
 import ru.practicum.ewm.event.model.CustomDateDeserializer;
 import ru.practicum.ewm.location.model.LocationDto;
 
@@ -21,7 +22,7 @@ public class EventUpdateDto {
     private Long category;
 
     @JsonDeserialize(using = CustomDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
     private LocalDateTime eventDate;
 
     private String description;

@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "users/{userId}/events")
+@RequestMapping(path = "/users/{userId}/events")
 public class InitiatorAPIRequestController {
     private final RequestService requestService;
 

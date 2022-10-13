@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.boot.jackson.JsonComponent;
+import ru.practicum.ewm.EwmService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class CustomDateDeserializer extends JsonDeserializer<LocalDateTime> {
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode jsonNode = p.getCodec().readTree(p);
         String date = jsonNode.asText();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(EwmService.DATE_FORMAT);
         return LocalDateTime.parse(date, formatter);
     }
 }

@@ -4,9 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 
 @Data
 @Builder
@@ -21,8 +19,12 @@ public class LocationInputDto {
     @DecimalMax(value = "+180.0", message = "Invalid longitude - over max.")
     private Double lon;
 
+    @NotBlank
+    @Size(max = 500)
     private String description;
 
+    @NotBlank
+    @Size(max = 255)
     private String name;
 
     @PositiveOrZero

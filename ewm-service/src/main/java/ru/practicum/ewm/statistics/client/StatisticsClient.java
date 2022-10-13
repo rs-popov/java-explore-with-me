@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import ru.practicum.ewm.EwmService;
 import ru.practicum.ewm.statistics.model.EndpointHitDto;
 import ru.practicum.ewm.statistics.model.ViewStatsDto;
 
@@ -35,7 +36,7 @@ public class StatisticsClient extends BaseClient {
                 .app("ExploreWithMe")
                 .uri(uri)
                 .ip(userIp)
-                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(EwmService.DATE_FORMAT)))
                 .build();
         return post("/hit", endpointHitDto);
     }

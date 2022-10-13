@@ -16,7 +16,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "admin/location")
+@RequestMapping(path = "/admin/location")
 public class AdminAPILocationController {
     private final LocationService locationService;
 

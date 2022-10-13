@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.categories.model.Category;
+import ru.practicum.ewm.categories.model.CategoryDto;
+import ru.practicum.ewm.categories.model.CategoryMapper;
 import ru.practicum.ewm.categories.repository.CategoryRepository;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.exceptions.BadRequestException;
@@ -27,20 +29,20 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     @CreationLogging
-    public Category createCategory(Category category) {
+    public CategoryDto createCategory(CategoryDto category) {
         if (categoryRepository.findByName(category.getName()) != null) {
             log.warn("Category was not create because category name must be unique.");
             throw new BadRequestException("Category name must be unique.");
         }
-        return categoryRepository.save(category);
+        return CategoryMapper.toCategoryDto(categoryRepository.save(CategoryMapper.toCategoryFromDto(category)));
     }
 
     @Override
     @Transactional
     @UpdateLogging
-    public Category updateCategory(Category category) {
+    public CategoryDto updateCategory(CategoryDto category) {
         getCategory(category.getId());
-        return categoryRepository.save(category);
+        return CategoryMapper.toCategoryDto(categoryRepository.save(CategoryMapper.toCategoryFromDto(category)));
     }
 
     @Override

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -26,11 +28,13 @@ public class User {
      * Имя
      */
     @Column(name = "name", nullable = false)
+    @Size(min = 1, max = 255)
     private String name;
 
     /**
      * Почтовый адрес
      */
     @Column(name = "email", nullable = false, unique = true)
+    @Email
     private String email;
 }

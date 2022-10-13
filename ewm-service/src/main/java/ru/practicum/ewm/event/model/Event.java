@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.EwmService;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -33,18 +35,21 @@ public class Event {
      * Заголовок
      */
     @Column(name = "title", nullable = false)
+    @Size(min = 1, max = 120)
     private String title;
 
     /**
      * Полное описание события
      */
     @Column(name = "description")
+    @Size(min = 1, max = 7000)
     private String description;
 
     /**
      * Краткое описание
      */
     @Column(name = "annotation", nullable = false)
+    @Size(min = 1, max = 2000)
     private String annotation;
 
     /**
@@ -59,7 +64,7 @@ public class Event {
      */
     @Column(name = "event_date", columnDefinition = "TIMESTAMP")
     @JsonDeserialize(using = CustomDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
     @Future
     private LocalDateTime eventDate;
 
@@ -68,7 +73,7 @@ public class Event {
      */
     @Column(name = "created_on")
     @JsonDeserialize(using = CustomDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
     private LocalDateTime createdOn;
 
     /**
@@ -76,7 +81,7 @@ public class Event {
      */
     @Column(name = "published_on")
     @JsonDeserialize(using = CustomDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
     private LocalDateTime publishedOn;
 
     /**

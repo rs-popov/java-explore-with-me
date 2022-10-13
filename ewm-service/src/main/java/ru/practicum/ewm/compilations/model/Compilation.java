@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.event.model.Event;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Data
@@ -36,6 +37,7 @@ public class Compilation {
      * Заголовок подборки
      */
     @Column(name = "title", nullable = false)
+    @Size(min = 3, max = 255)
     private String title;
 
     /**

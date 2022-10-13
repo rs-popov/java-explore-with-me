@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import ru.practicum.ewm.EwmService;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.user.model.dto.UserShortOutputDto;
 
@@ -27,7 +28,7 @@ public class EventOutputShortDto {
 
     private Long confirmedRequests;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
     @Future
     private LocalDateTime eventDate;
 

@@ -9,9 +9,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import ru.practicum.ewm.EwmStatsServer;
 import ru.practicum.ewm.model.dto.CustomDateDeserializer;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -28,11 +30,12 @@ public class EndpointHit {
     private Long id;
 
     @Column(name = "created", nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmStatsServer.DATE_FORMAT)
     @JsonDeserialize(using = CustomDateDeserializer.class)
     private LocalDateTime timestamp;
 
     @Column(name = "uri", nullable = false)
+    @Size(min = 3, max = 255)
     private String uri;
 
     @Type(type = "jsonb")

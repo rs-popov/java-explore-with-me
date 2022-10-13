@@ -3,11 +3,13 @@ package ru.practicum.ewm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.model.EndpointHit;
 import ru.practicum.ewm.model.ViewStats;
 
 import java.util.List;
 
+@Repository
 public interface StatisticsRepository extends JpaRepository<EndpointHit, Long> {
     @Query(nativeQuery = true, value =
             "select jsonb_extract_path_text(h.attributes, 'app') as app, h.uri as uri, count(h.uri) as hits " +

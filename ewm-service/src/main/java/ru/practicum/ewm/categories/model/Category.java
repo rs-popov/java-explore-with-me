@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -23,5 +24,6 @@ public class Category {
      * Название категории
      */
     @Column(name = "name", nullable = false)
+    @Size(min = 3, max = 255)
     private String name;
 }
