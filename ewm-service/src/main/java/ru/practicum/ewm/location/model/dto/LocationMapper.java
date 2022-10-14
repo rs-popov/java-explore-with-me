@@ -1,4 +1,6 @@
-package ru.practicum.ewm.location.model;
+package ru.practicum.ewm.location.model.dto;
+
+import ru.practicum.ewm.location.model.Location;
 
 public class LocationMapper {
     public static LocationDto toLocationDto(Location location) {
@@ -22,6 +24,16 @@ public class LocationMapper {
                 .name(locationInputDto.getName())
                 .description(locationInputDto.getDescription())
                 .radius(locationInputDto.getRadius())
+                .build();
+    }
+
+    public static LocationOutputDto toLocationOutput(Location location) {
+        return LocationOutputDto.builder()
+                .lat(location.getLat())
+                .lon(location.getLon())
+                .name(location.getName())
+                .description(location.getDescription())
+                .radius(location.getRadius())
                 .build();
     }
 }

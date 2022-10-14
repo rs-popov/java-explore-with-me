@@ -6,7 +6,7 @@ import ru.practicum.ewm.model.dto.EndpointHitDto;
 import java.util.List;
 
 public interface StatisticsService {
-    EndpointHitDto addHit(EndpointHitDto endpointHitDto);
+    void addHit(EndpointHitDto endpointHitDto);
 
     List<ViewStats> getStats(String rangeStart,
                              String rangeEnd,

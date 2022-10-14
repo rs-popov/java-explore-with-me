@@ -18,8 +18,8 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @PostMapping("/hit")
-    public EndpointHitDto addHit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
-        return statisticsService.addHit(endpointHitDto);
+    public void addHit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
+        statisticsService.addHit(endpointHitDto);
     }
 
     @GetMapping("/stats")

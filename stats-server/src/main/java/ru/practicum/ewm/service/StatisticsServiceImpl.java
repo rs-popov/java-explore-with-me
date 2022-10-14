@@ -19,12 +19,11 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final StatisticsRepository statisticsRepository;
 
     @Override
-    public EndpointHitDto addHit(EndpointHitDto endpointHitDto) {
+    public void addHit(EndpointHitDto endpointHitDto) {
         EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
         EndpointHit result = statisticsRepository.save(endpointHit);
         log.info("Add hit at uri={} from ip={} and app={}.",
                 result.getUri(), result.getAttributes().getIp(), result.getAttributes().getApp());
-        return EndpointHitMapper.toEndpointHitDto(result);
     }
 
     @Override

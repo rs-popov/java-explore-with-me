@@ -4,11 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.ewm.EwmService;
+import ru.practicum.ewm.config.AppConfig;
 import ru.practicum.ewm.statistics.model.EndpointHitDto;
 import ru.practicum.ewm.statistics.model.ViewStatsDto;
 
@@ -31,14 +30,14 @@ public class StatisticsClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> addEndpointHit(String userIp, String uri) {
+    public void addEndpointHit(String userIp, String uri) {
         EndpointHitDto endpointHitDto = EndpointHitDto.builder()
                 .app("ExploreWithMe")
                 .uri(uri)
                 .ip(userIp)
-                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(EwmService.DATE_FORMAT)))
+                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(AppConfig.DATE_FORMAT)))
                 .build();
-        return post("/hit", endpointHitDto);
+        post("/hit", endpointHitDto);
     }
 
     public Integer getStatsForEvent(Long eventId) {

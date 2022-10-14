@@ -49,7 +49,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @DeletionLogging
     public void deleteCategory(Long catId) {
-        Category category = getCategory(catId);
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + catId + " was not found."));
         if (eventRepository.getCountEventByCategoryId(catId) != 0) {
             log.warn("For deleting category no event should be associated with the category.");
             throw new BadRequestException("For deleting category no event should be associated with the category.");
@@ -58,15 +59,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories(Integer from, Integer size) {
+    public List<CategoryDto> getAllCategories(Integer from, Integer size) {
         return categoryRepository.findAll(getPageRequest(from, size)).stream()
+                .map(CategoryMapper::toCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Category getCategory(Long catId) {
-        return categoryRepository.findById(catId)
+    public CategoryDto getCategory(Long catId) {
+        Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + catId + " was not found."));
+        return CategoryMapper.toCategoryDto(category);
     }
 
     private PageRequest getPageRequest(Integer from, Integer size) {

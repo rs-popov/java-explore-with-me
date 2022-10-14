@@ -6,10 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.exceptions.BadRequestException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
-import ru.practicum.ewm.location.model.Location;
-import ru.practicum.ewm.location.model.LocationInputDto;
-import ru.practicum.ewm.location.model.LocationMapper;
-import ru.practicum.ewm.location.model.LocationOutputDtoWithDistance;
+import ru.practicum.ewm.location.model.*;
+import ru.practicum.ewm.location.model.dto.LocationInputDto;
+import ru.practicum.ewm.location.model.dto.LocationMapper;
+import ru.practicum.ewm.location.model.dto.LocationOutputDto;
+import ru.practicum.ewm.location.model.dto.LocationOutputDtoWithDistance;
 import ru.practicum.ewm.location.repository.LocationRepository;
 
 import java.util.List;
@@ -22,18 +23,20 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
 
     @Override
-    public Location addLocation(LocationInputDto locationInputDto) {
+    public LocationOutputDto addLocation(LocationInputDto locationInputDto) {
         if (locationRepository.findLocation(locationInputDto.getLat(), locationInputDto.getLon()).isPresent()) {
-            throw new BadRequestException("");
+            throw new BadRequestException("Location "
+                    + locationInputDto.getLat() + ":" + locationInputDto.getLon() + " is already added.");
         }
         Location location = LocationMapper.toLocationFromInput(locationInputDto);
-        return locationRepository.save(location);
+        return LocationMapper.toLocationOutput(locationRepository.save(location));
     }
 
     @Override
-    public Location getLocationById(Long locId) {
-        return locationRepository.findById(locId)
+    public LocationOutputDto getLocationById(Long locId) {
+        Location location = locationRepository.findById(locId)
                 .orElseThrow(() -> new ObjectNotFoundException("Location id=" + locId + "is not found."));
+        return LocationMapper.toLocationOutput(location);
     }
 
     @Override

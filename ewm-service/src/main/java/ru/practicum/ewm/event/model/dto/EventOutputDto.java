@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import ru.practicum.ewm.EwmService;
 import ru.practicum.ewm.categories.model.Category;
+import ru.practicum.ewm.config.AppConfig;
 import ru.practicum.ewm.event.model.EventState;
-import ru.practicum.ewm.location.model.LocationDto;
+import ru.practicum.ewm.location.model.dto.LocationDto;
 import ru.practicum.ewm.user.model.dto.UserShortOutputDto;
 
 import javax.validation.constraints.Future;
@@ -29,14 +29,14 @@ public class EventOutputDto {
     private Category category;
     private Long confirmedRequests;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_FORMAT)
     @Future
     private LocalDateTime eventDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_FORMAT)
     private LocalDateTime createdOn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = EwmService.DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConfig.DATE_FORMAT)
     private LocalDateTime publishedOn;
 
     private String description;

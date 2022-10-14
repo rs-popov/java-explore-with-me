@@ -1,4 +1,4 @@
-package ru.practicum.ewm.location.model;
+package ru.practicum.ewm.location.model.dto;
 
 import lombok.Builder;
 import lombok.Data;

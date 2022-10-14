@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.categories.model.Category;
+import ru.practicum.ewm.categories.model.CategoryDto;
 import ru.practicum.ewm.categories.service.CategoryService;
 
 import javax.validation.constraints.Positive;
@@ -24,8 +25,8 @@ public class PublicAPICategoryController {
      * @param size - количество категорий в наборе
      */
     @GetMapping
-    public List<Category> getAllCategories(@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                           @RequestParam(defaultValue = "10") @Positive Integer size) {
+    public List<CategoryDto> getAllCategories(@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                              @RequestParam(defaultValue = "10") @Positive Integer size) {
         return categoryService.getAllCategories(from, size);
     }
 
@@ -35,7 +36,7 @@ public class PublicAPICategoryController {
      * @param catId - id категории
      */
     @GetMapping("/{catId}")
-    public Category getCategory(@PathVariable Long catId) {
+    public CategoryDto getCategory(@PathVariable Long catId) {
         return categoryService.getCategory(catId);
     }
 }

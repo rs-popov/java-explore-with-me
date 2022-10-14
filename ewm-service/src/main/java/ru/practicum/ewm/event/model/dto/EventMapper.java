@@ -4,7 +4,7 @@ import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.location.model.Location;
-import ru.practicum.ewm.location.model.LocationMapper;
+import ru.practicum.ewm.location.model.dto.LocationMapper;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.model.dto.UserMapper;
 

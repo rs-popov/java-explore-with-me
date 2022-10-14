@@ -3,9 +3,9 @@ package ru.practicum.ewm.location.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.location.model.Location;
-import ru.practicum.ewm.location.model.LocationInputDto;
-import ru.practicum.ewm.location.model.LocationOutputDtoWithDistance;
+import ru.practicum.ewm.location.model.dto.LocationInputDto;
+import ru.practicum.ewm.location.model.dto.LocationOutputDto;
+import ru.practicum.ewm.location.model.dto.LocationOutputDtoWithDistance;
 import ru.practicum.ewm.location.service.LocationService;
 
 import javax.validation.Valid;
@@ -26,7 +26,7 @@ public class AdminAPILocationController {
      * @param locationInputDto - данные добавляемой локации
      */
     @PostMapping()
-    public Location addLocation(@RequestBody @Valid LocationInputDto locationInputDto) {
+    public LocationOutputDto addLocation(@RequestBody @Valid LocationInputDto locationInputDto) {
         return locationService.addLocation(locationInputDto);
     }
 
@@ -36,7 +36,7 @@ public class AdminAPILocationController {
      * @param locId - id локации
      */
     @GetMapping("/{locId}")
-    public Location getLocationById(@PathVariable Long locId) {
+    public LocationOutputDto getLocationById(@PathVariable Long locId) {
         return locationService.getLocationById(locId);
     }
 
