@@ -3,7 +3,6 @@ package ru.practicum.ewm.categories.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.model.CategoryDto;
 import ru.practicum.ewm.categories.service.CategoryService;
 

@@ -1,6 +1,5 @@
 package ru.practicum.ewm.categories.service;
 
-import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.model.CategoryDto;
 
 import java.util.List;
