@@ -1,0 +1,14 @@
+package ru.practicum.ewm.user.model.dto;
+
+import lombok.Builder;
+import lombok.Data;
+
+import javax.validation.constraints.Size;
+
+@Data
+@Builder
+public class UserShortOutputDto {
+    private Long id;
+    @Size(min = 1, max = 255)
+    private String name;
+}
