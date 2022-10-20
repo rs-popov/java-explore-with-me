@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.config.OffsetLimitPageable;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
 import ru.practicum.ewm.logging.CreationLogging;
 import ru.practicum.ewm.logging.DeletionLogging;
@@ -45,12 +46,12 @@ public class UserServiceImpl implements UserService {
     public List<UserOutputDto> getUsers(List<Long> ids, Integer from, Integer size) {
         Page<User> users;
         if (ids == null || ids.isEmpty()) {
-            users = userRepository.findAll(getPageRequest(from, size));
+            users = userRepository.findAll(OffsetLimitPageable.of(from, size));
         } else if (ids.size() == 1) {
             User user = getUser(ids.get(0));
             return List.of(UserMapper.toUserOutputDto(user));
         } else {
-            users = userRepository.getUsersByIds(ids, getPageRequest(from, size));
+            users = userRepository.getUsersByIds(ids, OffsetLimitPageable.of(from, size));
             if (users.isEmpty()) {
                 throw new ObjectNotFoundException("Users with ids=" + ids + " was not found.");
             }
@@ -67,10 +68,5 @@ public class UserServiceImpl implements UserService {
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("User with id=" + userId + " was not found."));
-    }
-
-    private PageRequest getPageRequest(Integer from, Integer size) {
-        int page = from < size ? 0 : from / size;
-        return PageRequest.of(page, size);
     }
 }

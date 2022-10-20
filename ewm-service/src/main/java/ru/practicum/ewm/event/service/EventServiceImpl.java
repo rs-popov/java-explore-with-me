@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.repository.CategoryRepository;
+import ru.practicum.ewm.config.OffsetLimitPageable;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.dto.*;
@@ -65,7 +66,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventOutputShortDto> getEventsByInitiator(Long userId, Integer from, Integer size) {
-        return eventRepository.getEventsByInitiator(userId, getPageRequest(from, size)).stream()
+        return eventRepository.getEventsByInitiator(userId,
+                        OffsetLimitPageable.of(from, size)).stream()
                 .map(this::getShortOutputDto)
                 .collect(Collectors.toList());
     }
@@ -164,7 +166,7 @@ public class EventServiceImpl implements EventService {
                         paid,
                         rangeStart,
                         rangeEnd,
-                        getPageRequest(from, size))
+                        OffsetLimitPageable.of(from, size))
                 .stream()
                 .collect(Collectors.toList());
 
@@ -210,7 +212,7 @@ public class EventServiceImpl implements EventService {
                         categories,
                         rangeStart,
                         rangeEnd,
-                        getPageRequest(from, size))
+                        OffsetLimitPageable.of(from, size))
                 .stream()
                 .collect(Collectors.toList());
         return events.stream()
@@ -257,11 +259,6 @@ public class EventServiceImpl implements EventService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    private PageRequest getPageRequest(Integer from, Integer size) {
-        int page = from < size ? 0 : from / size;
-        return PageRequest.of(page, size);
     }
 
     private EventOutputDto getFullOutputDto(Event event) {

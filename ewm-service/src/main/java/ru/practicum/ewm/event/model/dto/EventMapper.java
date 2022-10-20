@@ -1,5 +1,7 @@
 package ru.practicum.ewm.event.model.dto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
@@ -10,6 +12,7 @@ import ru.practicum.ewm.user.model.dto.UserMapper;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
 
     public static Event toEventFromInputDto(EventInputDto eventInputDto, Category category, User initiator, Location location) {

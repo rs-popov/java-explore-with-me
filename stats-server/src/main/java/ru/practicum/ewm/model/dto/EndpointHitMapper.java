@@ -1,5 +1,7 @@
 package ru.practicum.ewm.model.dto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.practicum.ewm.config.AppConfig;
 import ru.practicum.ewm.model.Attributes;
 import ru.practicum.ewm.model.EndpointHit;
@@ -7,6 +9,7 @@ import ru.practicum.ewm.model.EndpointHit;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EndpointHitMapper {
     public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {
         return EndpointHitDto.builder()

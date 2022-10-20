@@ -1,7 +1,10 @@
 package ru.practicum.ewm.requests.model.dto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.practicum.ewm.requests.model.Request;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestMapper {
     public static RequestDto toRequestDto(Request request) {
         return RequestDto.builder()
