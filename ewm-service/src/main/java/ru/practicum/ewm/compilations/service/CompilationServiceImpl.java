@@ -2,7 +2,6 @@ package ru.practicum.ewm.compilations.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.compilations.model.Compilation;
@@ -10,6 +9,7 @@ import ru.practicum.ewm.compilations.model.dto.CompilationInputDto;
 import ru.practicum.ewm.compilations.model.dto.CompilationMapper;
 import ru.practicum.ewm.compilations.model.dto.CompilationOutputDto;
 import ru.practicum.ewm.compilations.repository.CompilationRepository;
+import ru.practicum.ewm.config.OffsetLimitPageable;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.dto.EventMapper;
 import ru.practicum.ewm.event.model.dto.EventOutputShortDto;
@@ -109,7 +109,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public List<CompilationOutputDto> getCompilations(Boolean pinned, Integer from, Integer size) {
-        return compilationRepository.getCompilations(pinned, getPageRequest(from, size)).stream()
+        return compilationRepository.getCompilations(pinned, OffsetLimitPageable.of(from, size)).stream()
                 .map(compilation -> CompilationMapper.toCompilationOutputDto(compilation, getEventsOutputByCompilation(compilation)))
                 .collect(Collectors.toList());
     }
@@ -128,11 +128,6 @@ public class CompilationServiceImpl implements CompilationService {
     private Event getEvent(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new ObjectNotFoundException("Event with id=" + eventId + " was not found."));
-    }
-
-    private PageRequest getPageRequest(Integer from, Integer size) {
-        int page = from < size ? 0 : from / size;
-        return PageRequest.of(page, size);
     }
 
     private EventOutputShortDto getShortOutputDto(Event event) {

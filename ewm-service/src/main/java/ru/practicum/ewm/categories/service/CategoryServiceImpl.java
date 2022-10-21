@@ -2,13 +2,13 @@ package ru.practicum.ewm.categories.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.categories.model.Category;
 import ru.practicum.ewm.categories.model.CategoryDto;
 import ru.practicum.ewm.categories.model.CategoryMapper;
 import ru.practicum.ewm.categories.repository.CategoryRepository;
+import ru.practicum.ewm.config.OffsetLimitPageable;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.exceptions.BadRequestException;
 import ru.practicum.ewm.exceptions.ObjectNotFoundException;
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAllCategories(Integer from, Integer size) {
-        return categoryRepository.findAll(getPageRequest(from, size)).stream()
+        return categoryRepository.findAll(OffsetLimitPageable.of(from, size)).stream()
                 .map(CategoryMapper::toCategoryDto)
                 .collect(Collectors.toList());
     }
@@ -70,10 +70,5 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new ObjectNotFoundException("Category with id=" + catId + " was not found."));
         return CategoryMapper.toCategoryDto(category);
-    }
-
-    private PageRequest getPageRequest(Integer from, Integer size) {
-        int page = from < size ? 0 : from / size;
-        return PageRequest.of(page, size);
     }
 }

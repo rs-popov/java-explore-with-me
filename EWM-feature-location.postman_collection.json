@@ -647,7 +647,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"lat\": \"55.755829\",\r\n  \"lon\": \"37.617627\",\r\n  \"name\": \"Moscow\",\r\n  \"description\": \"city\",\r\n  \"radius\": 15\r\n}",
+					"raw": "{\r\n  \"lat\": \"55.755821\",\r\n  \"lon\": \"37.617621\",\r\n  \"name\": \"Moscow\",\r\n  \"description\": \"city\",\r\n  \"radius\": 15\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
