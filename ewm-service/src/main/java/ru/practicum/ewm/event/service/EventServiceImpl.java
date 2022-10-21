@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.categories.model.Category;
@@ -295,7 +294,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private Location getOrCreateLocation(EventInputDto eventInputDto) {
-        Optional<Location> locationFromInput = locationRepository.findLocation(eventInputDto.getLocation().getLat(),
+        Optional<Location> locationFromInput = locationRepository.findLocationByPoint(eventInputDto.getLocation().getLat(),
                 eventInputDto.getLocation().getLon());
         Location resultLocation;
         if (locationFromInput.isPresent()) {

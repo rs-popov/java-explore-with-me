@@ -1,6 +1,7 @@
 package ru.practicum.ewm.location.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.config.OffsetLimitPageable;
 import ru.practicum.ewm.exceptions.BadRequestException;
@@ -14,6 +15,7 @@ import ru.practicum.ewm.location.repository.LocationRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
@@ -21,9 +23,13 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationOutputDto addLocation(LocationInputDto locationInputDto) {
-        locationRepository.findLocation(locationInputDto.getLat(), locationInputDto.getLon())
-                .orElseThrow(() -> new BadRequestException("Location "
-                        + locationInputDto.getLat() + ":" + locationInputDto.getLon() + " is already added."));
+        if(locationRepository.findLocationByPointWithDistAndName(locationInputDto.getLat(), locationInputDto.getLon(),
+                        locationInputDto.getRadius(), locationInputDto.getName()).isPresent()){
+            log.warn("The location name={}, lat={}, lon={} was not added because such a location already exists in location radius",
+                    locationInputDto.getName(),locationInputDto.getLat(), locationInputDto.getLon());
+            throw new BadRequestException("Location "
+                    + locationInputDto.getLat() + " : " + locationInputDto.getLon() + " is already added.");
+        }
         Location location = LocationMapper.toLocationFromInput(locationInputDto);
         return LocationMapper.toLocationOutput(locationRepository.save(location));
     }

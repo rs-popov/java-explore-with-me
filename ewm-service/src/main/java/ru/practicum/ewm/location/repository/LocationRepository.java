@@ -15,7 +15,16 @@ import java.util.Optional;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("select l from Location l where l.lat = ?1 and l.lon = ?2 ")
-    Optional<Location> findLocation(Double lat, Double lon);
+    Optional<Location> findLocationByPoint(Double lat, Double lon);
+
+    @Query(nativeQuery = true,
+            value = "select * from locations " +
+                    "where (distance(:lat, :lon, lat, lon) < (:distance))" +
+                    "and (:name is null or upper(name) like upper(concat('%', :name, '%')))")
+    Optional<Location> findLocationByPointWithDistAndName(@Param("lat") Double lat,
+                                                          @Param("lon") Double lon,
+                                                          @Param("distance") Double distance,
+                                                          @Param("name") String name);
 
     @Query(nativeQuery = true,
             value = "select *,distance(:lat, :lon, lat, lon) as distance from locations " +
