@@ -23,10 +23,10 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public LocationOutputDto addLocation(LocationInputDto locationInputDto) {
-        if(locationRepository.findLocationByPointWithDistAndName(locationInputDto.getLat(), locationInputDto.getLon(),
-                        locationInputDto.getRadius(), locationInputDto.getName()).isPresent()){
+        if (locationRepository.findLocationByPointWithDistAndName(locationInputDto.getLat(), locationInputDto.getLon(),
+                locationInputDto.getRadius(), locationInputDto.getName()).isPresent()) {
             log.warn("The location name={}, lat={}, lon={} was not added because such a location already exists in location radius",
-                    locationInputDto.getName(),locationInputDto.getLat(), locationInputDto.getLon());
+                    locationInputDto.getName(), locationInputDto.getLat(), locationInputDto.getLon());
             throw new BadRequestException("Location "
                     + locationInputDto.getLat() + " : " + locationInputDto.getLon() + " is already added.");
         }
